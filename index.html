@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b14">
+<title>VibeFlix Ultra</title>
+<style>
+:root{color-scheme:dark;--bg:#090b14;--panel:#151a2a;--muted:#9ca7bd;--purple:#895cff;--cyan:#35d8e9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font:15px system-ui,Arial,sans-serif}
+header{padding:18px;display:flex;align-items:center;justify-content:space-between;background:#0b0e18;position:sticky;top:0;z-index:5;border-bottom:1px solid #ffffff12}
+.logo{font-size:20px;font-weight:900;letter-spacing:.5px}.logo span{color:var(--cyan)}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:11px 14px;background:#252b40;color:white}
+.primary{background:linear-gradient(110deg,var(--purple),#5943d6)}
+nav{display:flex;gap:7px;padding:12px;overflow-x:auto}
+nav button{white-space:nowrap;color:var(--muted)}
+nav button.active{background:#5937a9;color:white}
+main{padding:0 14px 35px}
+.hero{min-height:260px;border-radius:20px;padding:23px;display:flex;flex-direction:column;justify-content:end;background:linear-gradient(0deg,#0a0c17 0%,#11142b99 60%,#31225a66),radial-gradient(ellipse at 80% 20%,#7548bb,#152344 55%,#090b14);margin-bottom:25px}
+.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:2px;font-weight:800}
+h1{font-size:34px;line-height:1.08;margin:10px 0}
+p{color:var(--muted);line-height:1.5}
+.section{margin:20px 0}
+.heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+h2{font-size:19px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{min-width:0;border-radius:14px;overflow:hidden;background:var(--panel);border:1px solid #ffffff12}
+.poster{aspect-ratio:3/4;background:linear-gradient(145deg,#342b60,#17243a 60%,#121522);display:flex;align-items:end;padding:12px;font-size:18px;font-weight:800;overflow:hidden}
+.poster img{width:100%;height:100%;object-fit:cover}
+.info{padding:10px}.info small{color:var(--muted)}
+.search{width:100%;padding:13px;border-radius:12px;border:1px solid #ffffff20;background:var(--panel);color:white;margin:5px 0 14px}
+.list{display:grid;gap:9px}
+.channel{display:flex;align-items:center;gap:10px;padding:12px;border-radius:12px;background:var(--panel)}
+.channel .details{flex:1;min-width:0;overflow-wrap:anywhere}
+.channel small{display:block;color:var(--muted);margin-top:4px}
+.channel button{padding:9px}
+.page.hidden{display:none}
+.player{margin-bottom:15px;background:#000;border-radius:14px;overflow:hidden}
+video{display:block;width:100%;max-height:55vh;background:#000}
+.field{width:100%;padding:12px;background:var(--panel);color:white;border:1px solid #ffffff20;border-radius:10px;margin:6px 0 14px}
+label{display:block;font-weight:600;font-size:13px}
+.notice{font-size:12px;color:var(--muted)}
+.empty{padding:24px;background:var(--panel);border-radius:12px;text-align:center;color:var(--muted)}
+footer{text-align:center;color:#6d7890;font-size:11px;padding:25px}
+@media(min-width:650px){main{max-width:900px;margin:auto}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hero{min-height:330px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">VIBE<span>FLIX</span> ULTRA</div>
+ <button onclick="page('settings')">⚙ Settings</button>
+</header>
+<nav>
+ <button class="active" data-tab="home" onclick="page('home')">⌂ Home</button>
+ <button data-tab="live" onclick="page('live')">▣ Live TV</button>
+ <button data-tab="movies" onclick="page('movies')">🎬 Movies</button>
+ <button data-tab="series" onclick="page('series')">🍿 Series</button>
+ <button data-tab="favorites" onclick="page('favorites')">♥ Favorites</button>
+</nav>
+<main>
+<section id="home" class="page">
+ <div class="hero">
+  <div class="eyebrow">YOUR ENTERTAINMENT WORLD</div>
+  <h1>Stories worth<br>staying for.</h1>
+  <p>Live television, movies and series — all in one place.</p>
+  <div><button class="primary" onclick="page('live')">Explore Live TV</button> <button onclick="page('settings')">Add playlists</button></div>
+ </div>
+ <div class="section">
+  <div class="heading"><h2>Explore VibeFlix</h2></div>
+  <div class="grid">
+   <div class="card" onclick="page('live')"><div class="poster">📡<br>Live TV</div><div class="info"><b>Live channels</b><br><small>Watch your playlists</small></div></div>
+   <div class="card" onclick="page('movies')"><div class="poster">🎬<br>Movies</div><div class="info"><b>Movie library</b><br><small>Search and play</small></div></div>
+   <div class="card" onclick="page('series')"><div class="poster">🍿<br>Series</div><div class="info"><b>Series</b><br><small>Explore your collection</small></div></div>
+   <div class="card" onclick="page('settings')"><div class="poster">⚙️<br>Playlists</div><div class="info"><b>Your sources</b><br><small>Configure content</small></div></div>
+  </div>
+ </div>
+</section>
+
+<section id="live" class="page hidden">
+ <div class="heading"><h2>Live TV</h2><span id="count" class="notice">0 channels</span></div>
+ <input id="liveSearch" class="search" placeholder="Search channels..." oninput="renderLive()">
+ <select id="country" class="field" onchange="renderLive()"><option value="">All countries</option></select>
+ <div id="playerBox" class="player hidden"><video id="video" controls playsinline></video></div>
+ <div id="liveList" class="list"></div>
+</section>
+
+<section id="movies" class="page hidden">
+ <h2>Movies</h2><input id="movieSearch" class="search" placeholder="Search movies..." oninput="renderVods('movies')">
+ <div id="movieGrid" class="grid"></div>
+</section>
+
+<section id="series" class="page hidden">
+ <h2>Series</h2><input id="seriesSearch" class="search" placeholder="Search series..." oninput="renderVods('series')">
+ <div id="seriesGrid" class="grid"></div>
+</section>
+
+<section id="favorites" class="page hidden">
+ <h2>My Favorites</h2><div id="favList" class="list section"></div>
+</section>
+
+<section id="settings" class="page hidden">
+ <h2>Playlist Settings</h2>
+ <p>Add M3U playlist URLs for content you are authorized to watch.</p>
+ <label>Live TV playlist URL<input id="liveUrl" class="field" placeholder="https://example.com/live.m3u"></label>
+ <label>Movies playlist URL<input id="movieUrl" class="field" placeholder="https://example.com/movies.m3u"></label>
+ <label>Series playlist URL<input id="seriesUrl" class="field" placeholder="https://example.com/series.m3u"></label>
+ <button class="primary" onclick="saveSettings()">Save playlists</button>
+ <button onclick="loadPlaylists()">Load playlists</button>
+ <p id="status" class="notice"></p>
+ <p class="notice">Playlist access depends on the provider. Some sources block browser access or require special authentication. This app does not include third-party channels or copyrighted content.</p>
+</section>
+</main>
+<footer>VIBEFLIX ULTRA · YOUR SCREEN, YOUR STORIES</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+let live=[],movies=[],series=[];
+let fav=JSON.parse(localStorage.getItem('vf_favs')||'[]');
+
+function page(id){
+ document.querySelectorAll('.page').forEach(x=>x.classList.toggle('hidden',x.id!==id));
+ document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+ if(id==='live')renderLive();
+ if(id==='movies'||id==='series')renderVods(id);
+ if(id==='favorites')renderFav();
+ window.scrollTo(0,0);
+}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function parseM3U(txt){
+ let out=[],cur=null;
+ for(let line of txt.split(/\r?\n/)){
+  line=line.trim();
+  if(line.startsWith('#EXTINF')){
+   const name=line.split(',').slice(1).join(',').trim()||'Unknown';
+   const attr=k=>line.match(new RegExp(k+'="([^"]*)"','i'))?.[1]||'';
+   cur={name,group:attr('group-title'),country:attr('tvg-country'),logo:attr('tvg-logo'),url:''};
+  }else if(line&&!line.startsWith('#')&&cur){cur.url=line;out.push(cur);cur=null;}
+ }
+ return out;
+}
+function saveSettings(){
+ ['liveUrl','movieUrl','seriesUrl'].forEach(id=>localStorage.setItem('vf_'+id,$(id).value.trim()));
+ $('status').textContent='Playlist settings saved on this device.';
+}
+function init(){
+ ['liveUrl','movieUrl','seriesUrl'].forEach(id=>$(id).value=localStorage.getItem('vf_'+id)||'');
+}
+async function loadPlaylists(){
+ saveSettings();$('status').textContent='Loading playlists...';
+ try{
+  const get=async id=>{const u=localStorage.getItem('vf_'+id);if(!u)return [];const r=await fetch(u);if(!r.ok)throw Error('HTTP '+r.status);return parseM3U(await r.text());};
+  [live,movies,series]=await Promise.all([get('liveUrl'),get('movieUrl'),get('seriesUrl')]);
+  const countries=[...new Set(live.map(x=>x.country).filter(Boolean))].sort();
+  $('country').innerHTML='<option value="">All countries</option>'+countries.map(c=>'<option>'+esc(c)+'</option>').join('');
+  renderLive();renderVods('movies');renderVods('series');
+  $('status').textContent=`Loaded: ${live.length} live channels, ${movies.length} movies, ${series.length} series.`;
+ }catch(e){$('status').textContent='Could not load playlist. The provider may block browser access: '+e.message;}
+}
+function renderLive(){
+ const q=$('liveSearch').value.toLowerCase(),co=$('country').value;
+ const arr=live.filter(x=>x.name.toLowerCase().includes(q)&&(!co||x.country===co));
+ $('count').textContent=arr.length+' channels';
+ $('liveList').innerHTML=arr.length?arr.map(x=>`<div class="channel"><div>📺</div><div class="details"><b>${esc(x.name)}</b><small>${esc(x.country||x.group||'Live TV')}</small></div><button onclick="toggleFav('${encodeURIComponent(x.url)}')">${fav.some(f=>f.url===x.url)?'♥':'♡'}</button><button class="primary" onclick="play('${encodeURIComponent(x.url)}')">Play</button></div>`).join(''):'<div class="empty">No channels yet. Add an M3U playlist in Settings.</div>';
+}
+function play(encoded){
+ const url=decodeURIComponent(encoded);
+ $('playerBox').classList.remove('hidden');
+ const v=$('video');v.src=url;v.play().catch(()=>{});
+ $('playerBox').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function toggleFav(encoded){
+ const url=decodeURIComponent(encoded),x=live.find(c=>c.url===url);
+ if(!x)return;
+ fav=fav.some(c=>c.url===url)?fav.filter(c=>c.url!==url):[...fav,x];
+ localStorage.setItem('vf_favs',JSON.stringify(fav));renderLive();renderFav();
+}
+function renderFav(){
+ $('favList').innerHTML=fav.length?fav.map(x=>`<div class="channel"><div>♥</div><div class="details"><b>${esc(x.name)}</b><small>${esc(x.country||x.group||'Favorite')}</small></div><button class="primary" onclick="play('${encodeURIComponent(x.url)}')">Play</button><button onclick="toggleFav('${encodeURIComponent(x.url)}')">Remove</button></div>`).join(''):'<div class="empty">Your favorite channels will appear here.</div>';
+}
+function renderVods(type){
+ const arr=type==='movies'?movies:series;
+ const q=$(type==='movies'?'movieSearch':'seriesSearch').value.toLowerCase();
+ const target=$(type==='movies'?'movieGrid':'seriesGrid');
+ const filtered=arr.filter(x=>x.name.toLowerCase().includes(q));
+ target.innerHTML=filtered.length?filtered.map(x=>`<div class="card" onclick="play('${encodeURIComponent(x.url)}')"><div class="poster">${x.logo?`<img src="${esc(x.logo)}" alt="">`:'🎬'}<br>${esc(x.name)}</div><div class="info"><b>${esc(x.name)}</b><br><small>${esc(x.group||type)}</small></div></div>`).join(''):'<div class="empty" style="grid-column:1/-1">No items loaded. Add a playlist in Settings.</div>';
+}
+init();
+renderLive();renderVods('movies');renderVods('series');renderFav();
+</script>
+</body>
+</html>
